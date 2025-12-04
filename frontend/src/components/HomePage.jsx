@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const HomePage = ({ onGetStarted }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header/Navigation */}
@@ -20,7 +23,7 @@ const HomePage = ({ onGetStarted }) => {
                 onClick={onGetStarted}
                 className="btn-primary"
               >
-                Commencer →
+                {t('getStarted')} →
               </button>
             </nav>
           </div>
@@ -32,17 +35,16 @@ const HomePage = ({ onGetStarted }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Gérez vos projets avec simplicité
+              {t('heroTitle')} <span className="text-blue-600">{t('heroTitleHighlight')}</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              EpiTrello est un outil de gestion de projet basé sur la méthode Kanban.
-              Organisez vos tâches, suivez leur progression et collaborez efficacement.
+              {t('heroDescription')}
             </p>
             <button
               onClick={onGetStarted}
               className="btn-primary text-lg px-8 py-4 inline-flex items-center gap-2"
             >
-              Accéder à mes tableaux →
+              {t('myBoards')} →
             </button>
           </div>
 
@@ -92,10 +94,10 @@ const HomePage = ({ onGetStarted }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Fonctionnalités principales
+              {t('mainFeatures')}
             </h2>
             <p className="text-lg text-gray-600">
-              Tout ce dont vous avez besoin pour gérer vos projets efficacement
+              {t('mainFeaturesDesc')}
             </p>
           </div>
 
@@ -106,10 +108,10 @@ const HomePage = ({ onGetStarted }) => {
                 <span className="text-3xl">📋</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Tableaux Kanban
+                {t('kanbanBoards')}
               </h3>
               <p className="text-gray-600">
-                Créez des tableaux pour chaque projet et organisez vos tâches en colonnes
+                {t('kanbanBoardsDesc')}
               </p>
             </div>
 
@@ -119,10 +121,10 @@ const HomePage = ({ onGetStarted }) => {
                 <span className="text-3xl">🎯</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Drag & Drop
+                {t('dragDrop')}
               </h3>
               <p className="text-gray-600">
-                Déplacez vos cartes facilement par glisser-déposer pour suivre leur progression
+                {t('dragDropDesc')}
               </p>
             </div>
 
@@ -132,10 +134,10 @@ const HomePage = ({ onGetStarted }) => {
                 <span className="text-3xl">⚡</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Temps réel
+                {t('realTime')}
               </h3>
               <p className="text-gray-600">
-                Synchronisation instantanée de vos modifications entre le frontend et le backend
+                {t('realTimeDesc')}
               </p>
             </div>
 
@@ -145,10 +147,10 @@ const HomePage = ({ onGetStarted }) => {
                 <span className="text-3xl">✏️</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Édition facile
+                {t('easyEdit')}
               </h3>
               <p className="text-gray-600">
-                Modifiez vos cartes et listes directement en cliquant dessus
+                {t('easyEditDesc')}
               </p>
             </div>
 
@@ -158,10 +160,10 @@ const HomePage = ({ onGetStarted }) => {
                 <span className="text-3xl">🎨</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Interface moderne
+                {t('modernInterface')}
               </h3>
               <p className="text-gray-600">
-                Design épuré et professionnel pour une meilleure expérience utilisateur
+                {t('modernInterfaceDesc')}
               </p>
             </div>
 
@@ -171,10 +173,10 @@ const HomePage = ({ onGetStarted }) => {
                 <span className="text-3xl">💾</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Sauvegarde auto
+                {t('autoSave')}
               </h3>
               <p className="text-gray-600">
-                Vos données sont automatiquement sauvegardées dans la base de données
+                {t('autoSaveDesc')}
               </p>
             </div>
           </div>
@@ -185,16 +187,16 @@ const HomePage = ({ onGetStarted }) => {
       <section className="py-20 bg-blue-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
-            Prêt à commencer ?
+            {t('readyToStart')}
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Accédez à vos tableaux et commencez à organiser vos projets dès maintenant
+            {t('readyToStartDesc')}
           </p>
           <button
             onClick={onGetStarted}
             className="bg-white text-blue-900 hover:bg-blue-50 px-8 py-4 rounded-lg font-semibold text-lg transition-all"
           >
-            Accéder à l'application →
+            {t('accessApp')} →
           </button>
         </div>
       </section>
@@ -204,10 +206,10 @@ const HomePage = ({ onGetStarted }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-gray-600">
             <p className="mb-2">
-              <strong className="text-gray-900">EpiTrello</strong> - Gestion de projet simplifiée
+              <strong className="text-gray-900">EpiTrello</strong> - {t('projectManagement')}
             </p>
             <p className="text-sm">
-              Développé avec React, Node.js, Express et SQLite
+              {t('builtWith')}
             </p>
           </div>
         </div>

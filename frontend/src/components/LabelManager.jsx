@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { labelsAPI } from '../services/api';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
+  const { t } = useLanguage();
   const [labels, setLabels] = useState([]);
   const [cardLabels, setCardLabels] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
@@ -87,7 +89,7 @@ const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
   };
 
   const handleDeleteLabel = async (labelId) => {
-    if (!window.confirm('Supprimer ce label ?')) return;
+    if (!window.confirm(t('deleteLabelConfirm'))) return;
 
     try {
       await labelsAPI.delete(labelId);
@@ -125,12 +127,12 @@ const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
     <div className="label-manager">
       <div className="mb-4">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="font-semibold text-gray-800">🏷️ Labels</h3>
+          <h3 className="font-semibold text-gray-800">🏷️ {t('labels')}</h3>
           <button
             onClick={() => setIsCreating(!isCreating)}
             className="text-sm px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
-            {isCreating ? 'Annuler' : '+ Nouveau'}
+            {isCreating ? t('cancel') : `+ ${t('new')}`}
           </button>
         </div>
 
@@ -140,7 +142,7 @@ const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
               type="text"
               value={newLabel.title}
               onChange={(e) => setNewLabel({ ...newLabel, title: e.target.value })}
-              placeholder="Nom du label"
+              placeholder={t('labelName')}
               className="input mb-2"
               autoFocus
             />
@@ -161,7 +163,7 @@ const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
               onClick={handleCreateLabel}
               className="btn-primary w-full text-sm"
             >
-              Créer
+              {t('create')}
             </button>
           </div>
         )}
@@ -208,13 +210,13 @@ const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
                       onClick={handleUpdateLabel}
                       className="btn-primary flex-1 text-sm"
                     >
-                      Sauvegarder
+                      {t('save')}
                     </button>
                     <button
                       onClick={() => setEditingLabel(null)}
                       className="btn-secondary flex-1 text-sm"
                     >
-                      Annuler
+                      {t('cancel')}
                     </button>
                   </div>
                 </div>
@@ -233,14 +235,14 @@ const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
                   <button
                     onClick={() => setEditingLabel({ ...label })}
                     className="text-gray-400 hover:text-blue-500 transition-colors p-1"
-                    title="Modifier"
+                    title={t('edit')}
                   >
                     ✎
                   </button>
                   <button
                     onClick={() => handleDeleteLabel(label.id)}
                     className="text-gray-400 hover:text-red-500 transition-colors p-1"
-                    title="Supprimer"
+                    title={t('delete')}
                   >
                     ✕
                   </button>
@@ -252,7 +254,7 @@ const LabelManager = ({ boardId, cardId, onLabelsChange }) => {
 
         {labels.length === 0 && !isCreating && (
           <p className="text-gray-400 text-sm text-center py-4">
-            Aucun label disponible
+            {t('noLabels')}
           </p>
         )}
       </div>

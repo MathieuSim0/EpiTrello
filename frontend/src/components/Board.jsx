@@ -6,8 +6,10 @@ import List from './List';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
 import BoardSettings from './BoardSettings';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Board = ({ boardId, onBoardDeleted }) => {
+  const { t } = useLanguage();
   const [board, setBoard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -193,7 +195,7 @@ const Board = ({ boardId, onBoardDeleted }) => {
                 className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
               >
                 <span>⚙️</span>
-                <span>Paramètres</span>
+                <span>{t('settings')}</span>
               </button>
             </div>
 
@@ -207,7 +209,7 @@ const Board = ({ boardId, onBoardDeleted }) => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Rechercher des cartes..."
+                  placeholder={t('searchCards')}
                   className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
                 {searchQuery && (
@@ -225,17 +227,17 @@ const Board = ({ boardId, onBoardDeleted }) => {
                 onChange={(e) => setSearchFilter(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">Tout</option>
-                <option value="title">Titre</option>
-                <option value="description">Description</option>
-                <option value="labels">Labels</option>
+                <option value="all">{t('all')}</option>
+                <option value="title">{t('title')}</option>
+                <option value="description">{t('description')}</option>
+                <option value="labels">{t('labels')}</option>
               </select>
 
               {searchQuery && (
                 <div className="text-sm text-gray-500 animate-fade-in">
-                  {filteredCards} / {totalCards} carte{totalCards > 1 ? 's' : ''}
+                  {filteredCards} / {totalCards} {t('cards')}
                   {filteredCards === 0 && (
-                    <span className="ml-2 text-amber-600">Aucun résultat</span>
+                    <span className="ml-2 text-amber-600">{t('noResults')}</span>
                   )}
                 </div>
               )}
@@ -277,7 +279,7 @@ const Board = ({ boardId, onBoardDeleted }) => {
                     type="text"
                     value={newListTitle}
                     onChange={(e) => setNewListTitle(e.target.value)}
-                    placeholder="Titre de la liste..."
+                    placeholder={t('listTitle')}
                     className="input mb-3 font-semibold"
                     autoFocus
                   />
@@ -286,7 +288,7 @@ const Board = ({ boardId, onBoardDeleted }) => {
                       onClick={handleCreateList}
                       className="btn-primary flex-1 text-sm"
                     >
-                      Ajouter
+                      {t('add')}
                     </button>
                     <button
                       onClick={() => {
@@ -295,7 +297,7 @@ const Board = ({ boardId, onBoardDeleted }) => {
                       }}
                       className="btn-secondary flex-1 text-sm"
                     >
-                      Annuler
+                      {t('cancel')}
                     </button>
                   </div>
                 </div>
@@ -304,7 +306,7 @@ const Board = ({ boardId, onBoardDeleted }) => {
                   onClick={() => setIsAddingList(true)}
                   className="w-full bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 rounded-xl p-4 text-left flex items-center transition-all font-semibold shadow-sm hover:shadow-md border border-gray-200"
                 >
-                  <span className="text-xl mr-2">+</span> Ajouter une liste
+                  <span className="text-xl mr-2">+</span> {t('addList')}
                 </button>
               )}
             </div>

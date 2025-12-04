@@ -1,8 +1,10 @@
 import { useDrop } from 'react-dnd';
 import { useState } from 'react';
 import Card from './Card';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdateCard, onDeleteCard, onMoveCard, isFiltered, originalCardCount }) => {
+  const { t } = useLanguage();
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState('');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -76,12 +78,12 @@ const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdat
         </div>
         <button
           onClick={() => {
-            if (window.confirm('Supprimer cette liste et toutes ses cartes ?')) {
+            if (window.confirm(t('deleteListConfirm'))) {
               onDeleteList(list.id);
             }
           }}
           className="text-gray-400 hover:text-red-500 transition-colors ml-2 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50"
-          title="Supprimer la liste"
+          title={t('delete')}
         >
           ✕
         </button>
@@ -104,7 +106,7 @@ const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdat
           <textarea
             value={newCardTitle}
             onChange={(e) => setNewCardTitle(e.target.value)}
-            placeholder="Titre de la carte..."
+            placeholder={t('cardTitle')}
             className="textarea"
             rows="2"
             autoFocus
@@ -114,7 +116,7 @@ const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdat
               onClick={handleAddCard}
               className="btn-primary flex-1 text-sm"
             >
-              Ajouter
+              {t('add')}
             </button>
             <button
               onClick={() => {
@@ -123,7 +125,7 @@ const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdat
               }}
               className="btn-secondary flex-1 text-sm"
             >
-              Annuler
+              {t('cancel')}
             </button>
           </div>
         </div>
@@ -132,7 +134,7 @@ const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdat
           onClick={() => setIsAddingCard(true)}
           className="w-full text-left text-gray-600 hover:bg-gray-200 rounded-lg px-3 py-2 text-sm flex items-center transition-smooth font-medium hover:text-gray-800"
         >
-          <span className="text-xl mr-2">+</span> Ajouter une carte
+          <span className="text-xl mr-2">+</span> {t('addCard')}
         </button>
       )}
     </div>

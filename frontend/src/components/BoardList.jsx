@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { boardsAPI } from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const BoardList = ({ onSelectBoard }) => {
+  const { t } = useLanguage();
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,7 +25,7 @@ const BoardList = ({ onSelectBoard }) => {
       setBoards(response.data);
     } catch (err) {
       console.error('Erreur lors du chargement des tableaux:', err);
-      setError('Impossible de charger les tableaux');
+      setError(t('loadBoardsError'));
     } finally {
       setLoading(false);
     }
@@ -47,7 +49,7 @@ const BoardList = ({ onSelectBoard }) => {
   };
 
   const handleDeleteBoard = async (boardId) => {
-    if (!window.confirm('Supprimer ce tableau et tout son contenu ?')) return;
+    if (!window.confirm(t('deleteBoardConfirm'))) return;
 
     try {
       await boardsAPI.delete(boardId);
@@ -70,10 +72,10 @@ const BoardList = ({ onSelectBoard }) => {
       <div className="max-w-7xl mx-auto">
         <header className="mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Mes Tableaux
+            {t('myBoards')}
           </h1>
           <p className="text-lg text-gray-600">
-            Gérez et organisez tous vos projets
+            {t('myBoardsSubtitle')}
           </p>
         </header>
 
@@ -107,7 +109,7 @@ const BoardList = ({ onSelectBoard }) => {
                 )}
               </div>
               <div className="bg-gray-50 px-6 py-3 flex justify-between items-center border-t border-gray-100">
-                <span className="text-xs text-gray-500">Cliquez pour ouvrir</span>
+                <span className="text-xs text-gray-500">{t('clickToOpen')}</span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -115,7 +117,7 @@ const BoardList = ({ onSelectBoard }) => {
                   }}
                   className="text-red-500 hover:text-red-700 font-medium text-sm transition-colors"
                 >
-                  Supprimer
+                  {t('delete')}
                 </button>
               </div>
             </div>
@@ -128,14 +130,14 @@ const BoardList = ({ onSelectBoard }) => {
                   type="text"
                   value={newBoardTitle}
                   onChange={(e) => setNewBoardTitle(e.target.value)}
-                  placeholder="Titre du tableau..."
+                  placeholder={t('boardTitlePlaceholder')}
                   className="input mb-3 font-semibold"
                   autoFocus
                 />
                 <textarea
                   value={newBoardDescription}
                   onChange={(e) => setNewBoardDescription(e.target.value)}
-                  placeholder="Description (optionnel)..."
+                  placeholder={t('boardDescriptionPlaceholder')}
                   className="textarea mb-3"
                   rows="3"
                 />
@@ -144,7 +146,7 @@ const BoardList = ({ onSelectBoard }) => {
                     onClick={handleCreateBoard}
                     className="btn-primary flex-1"
                   >
-                    Créer
+                    {t('create')}
                   </button>
                   <button
                     onClick={() => {
@@ -154,7 +156,7 @@ const BoardList = ({ onSelectBoard }) => {
                     }}
                     className="btn-secondary flex-1"
                   >
-                    Annuler
+                    {t('cancel')}
                   </button>
                 </div>
               </div>
@@ -166,8 +168,8 @@ const BoardList = ({ onSelectBoard }) => {
                 <div className="w-16 h-16 bg-gray-100 group-hover:bg-blue-100 rounded-full flex items-center justify-center mb-4 transition-colors">
                   <span className="text-3xl group-hover:scale-110 transition-transform">+</span>
                 </div>
-                <span className="text-lg font-semibold">Créer un nouveau tableau</span>
-                <span className="text-sm text-gray-500 mt-1">Cliquez pour commencer</span>
+                <span className="text-lg font-semibold">{t('createNewBoard')}</span>
+                <span className="text-sm text-gray-500 mt-1">{t('clickToStart')}</span>
               </button>
             )}
           </div>

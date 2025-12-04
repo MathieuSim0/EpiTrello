@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 import LabelManager from './LabelManager';
 import CommentSection from './CommentSection';
 import { commentsAPI } from '../services/api';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Card = ({ card, onUpdate, onDelete, boardId }) => {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [showLabels, setShowLabels] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -54,14 +56,14 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="input mb-3 font-semibold"
-          placeholder="Titre de la carte"
+          placeholder={t('cardTitle')}
           autoFocus
         />
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="textarea mb-3"
-          placeholder="Description (optionnel)"
+          placeholder={t('cardDescription')}
           rows="3"
         />
         <div className="flex gap-2 mb-3">
@@ -69,13 +71,13 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
             onClick={handleSave}
             className="btn-primary flex-1 text-sm"
           >
-            💾 Enregistrer
+            💾 {t('save')}
           </button>
           <button
             onClick={handleCancel}
             className="btn-secondary flex-1 text-sm"
           >
-            Annuler
+            {t('cancel')}
           </button>
         </div>
         <div className="border-t pt-3">
@@ -83,7 +85,7 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
             onClick={() => setShowLabels(!showLabels)}
             className="text-sm text-blue-600 hover:text-blue-700 font-medium mb-2 block"
           >
-            {showLabels ? '▼ Masquer les labels' : '▶ Gérer les labels'}
+            {showLabels ? `▼ ${t('hideLabels')}` : `▶ ${t('manageLabels')}`}
           </button>
           {showLabels && (
             <LabelManager
@@ -98,7 +100,7 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
             onClick={() => setShowComments(!showComments)}
             className="text-sm text-blue-600 hover:text-blue-700 font-medium mb-2 block"
           >
-            {showComments ? '▼ Masquer les commentaires' : `▶ Commentaires (${commentCount})`}
+            {showComments ? `▼ ${t('comments')}` : `▶ ${t('comments')} (${commentCount})`}
           </button>
           {showComments && (
             <CommentSection cardId={card.id} />
@@ -148,12 +150,12 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
         </div>
         <button
           onClick={() => {
-            if (window.confirm('Supprimer cette carte ?')) {
+            if (window.confirm(t('deleteCardConfirm'))) {
               onDelete(card.id);
             }
           }}
           className="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 w-6 h-6 flex items-center justify-center rounded hover:bg-red-50"
-          title="Supprimer"
+          title={t('delete')}
         >
           ✕
         </button>
