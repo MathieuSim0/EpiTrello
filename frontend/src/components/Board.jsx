@@ -14,6 +14,8 @@ const Board = ({ boardId, onBoardDeleted }) => {
   const [isAddingList, setIsAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState('');
   const [showSettings, setShowSettings] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchFilter, setSearchFilter] = useState('all'); // 'all', 'title', 'description', 'labels'
 
   useEffect(() => {
     loadBoard();
@@ -133,6 +135,43 @@ const Board = ({ boardId, onBoardDeleted }) => {
     );
   }
 
+  // Fonction de filtrage des cartes
+  const filterCards = (cards) => {
+    if (!searchQuery.trim()) return cards;
+    
+    const query = searchQuery.toLowerCase().trim();
+    
+    return cards.filter(card => {
+      const titleMatch = card.title?.toLowerCase().includes(query);
+      const descriptionMatch = card.description?.toLowerCase().includes(query);
+      const labelsMatch = card.labels?.some(label => 
+        label.title?.toLowerCase().includes(query)
+      );
+
+      switch (searchFilter) {
+        case 'title':
+          return titleMatch;
+        case 'description':
+          return descriptionMatch;
+        case 'labels':
+          return labelsMatch;
+        default:
+          return titleMatch || descriptionMatch || labelsMatch;
+      }
+    });
+  };
+
+  // Appliquer le filtre aux listes
+  const filteredLists = board.lists?.map(list => ({
+    ...list,
+    cards: filterCards(list.cards || []),
+    originalCardCount: list.cards?.length || 0
+  }));
+
+  // Compter les résultats
+  const totalCards = board.lists?.reduce((acc, list) => acc + (list.cards?.length || 0), 0) || 0;
+  const filteredCards = filteredLists?.reduce((acc, list) => acc + list.cards.length, 0) || 0;
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="h-screen flex flex-col bg-gray-100 animate-fade-in">
@@ -157,6 +196,50 @@ const Board = ({ boardId, onBoardDeleted }) => {
                 <span>Paramètres</span>
               </button>
             </div>
+
+            {/* Barre de recherche */}
+            <div className="mt-4 flex flex-wrap gap-3 items-center">
+              <div className="relative flex-1 min-w-64 max-w-md">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  🔍
+                </span>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Rechercher des cartes..."
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              <select
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">Tout</option>
+                <option value="title">Titre</option>
+                <option value="description">Description</option>
+                <option value="labels">Labels</option>
+              </select>
+
+              {searchQuery && (
+                <div className="text-sm text-gray-500 animate-fade-in">
+                  {filteredCards} / {totalCards} carte{totalCards > 1 ? 's' : ''}
+                  {filteredCards === 0 && (
+                    <span className="ml-2 text-amber-600">Aucun résultat</span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -171,7 +254,7 @@ const Board = ({ boardId, onBoardDeleted }) => {
 
         <main className="flex-1 overflow-x-auto p-4">
           <div className="flex gap-4 h-full">
-            {board.lists?.map((list) => (
+            {filteredLists?.map((list) => (
               <List
                 key={list.id}
                 list={list}
@@ -182,6 +265,8 @@ const Board = ({ boardId, onBoardDeleted }) => {
                 onUpdateCard={handleUpdateCard}
                 onDeleteCard={handleDeleteCard}
                 onMoveCard={handleMoveCard}
+                isFiltered={searchQuery.trim() !== ''}
+                originalCardCount={list.originalCardCount}
               />
             ))}
 

@@ -2,7 +2,7 @@ import { useDrop } from 'react-dnd';
 import { useState } from 'react';
 import Card from './Card';
 
-const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdateCard, onDeleteCard, onMoveCard }) => {
+const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdateCard, onDeleteCard, onMoveCard, isFiltered, originalCardCount }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState('');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -44,24 +44,36 @@ const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdat
       }`}
     >
       <div className="flex justify-between items-center mb-4">
-        {isEditingTitle ? (
-          <input
-            type="text"
-            value={listTitle}
-            onChange={(e) => setListTitle(e.target.value)}
-            onBlur={handleUpdateTitle}
-            onKeyPress={(e) => e.key === 'Enter' && handleUpdateTitle()}
-            className="input flex-1 font-semibold text-lg"
-            autoFocus
-          />
-        ) : (
-          <h3
-            className="font-bold text-lg text-gray-800 cursor-pointer hover:text-blue-600 transition-colors"
-            onClick={() => setIsEditingTitle(true)}
-          >
-            {list.title}
-          </h3>
-        )}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {isEditingTitle ? (
+            <input
+              type="text"
+              value={listTitle}
+              onChange={(e) => setListTitle(e.target.value)}
+              onBlur={handleUpdateTitle}
+              onKeyPress={(e) => e.key === 'Enter' && handleUpdateTitle()}
+              className="input flex-1 font-semibold text-lg"
+              autoFocus
+            />
+          ) : (
+            <h3
+              className="font-bold text-lg text-gray-800 cursor-pointer hover:text-blue-600 transition-colors truncate"
+              onClick={() => setIsEditingTitle(true)}
+            >
+              {list.title}
+            </h3>
+          )}
+          <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full flex-shrink-0">
+            {isFiltered ? (
+              <span>
+                {list.cards?.length || 0}
+                <span className="text-gray-400">/{originalCardCount}</span>
+              </span>
+            ) : (
+              list.cards?.length || 0
+            )}
+          </span>
+        </div>
         <button
           onClick={() => {
             if (window.confirm('Supprimer cette liste et toutes ses cartes ?')) {
