@@ -1,8 +1,10 @@
 import { useDrag } from 'react-dnd';
 import { useState } from 'react';
+import LabelManager from './LabelManager';
 
-const Card = ({ card, onUpdate, onDelete }) => {
+const Card = ({ card, onUpdate, onDelete, boardId }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showLabels, setShowLabels] = useState(false);
   const [title, setTitle] = useState(card.title);
   const [description, setDescription] = useState(card.description || '');
 
@@ -45,7 +47,7 @@ const Card = ({ card, onUpdate, onDelete }) => {
           placeholder="Description (optionnel)"
           rows="3"
         />
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-3">
           <button
             onClick={handleSave}
             className="btn-primary flex-1 text-sm"
@@ -58,6 +60,21 @@ const Card = ({ card, onUpdate, onDelete }) => {
           >
             Annuler
           </button>
+        </div>
+        <div className="border-t pt-3">
+          <button
+            onClick={() => setShowLabels(!showLabels)}
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium mb-2"
+          >
+            {showLabels ? '▼ Masquer les labels' : '▶ Gérer les labels'}
+          </button>
+          {showLabels && (
+            <LabelManager
+              boardId={boardId}
+              cardId={card.id}
+              onLabelsChange={() => onUpdate(card.id, { title, description })}
+            />
+          )}
         </div>
       </div>
     );
@@ -72,6 +89,20 @@ const Card = ({ card, onUpdate, onDelete }) => {
     >
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1 min-w-0" onClick={() => setIsEditing(true)}>
+          {card.labels && card.labels.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {card.labels.map((label) => (
+                <span
+                  key={label.id}
+                  className="inline-block px-2 py-0.5 rounded text-xs font-medium text-white"
+                  style={{ backgroundColor: label.color }}
+                  title={label.title}
+                >
+                  {label.title}
+                </span>
+              ))}
+            </div>
+          )}
           <h4 className="font-semibold text-gray-800 mb-1 hover:text-blue-600 transition-colors">
             {card.title}
           </h4>

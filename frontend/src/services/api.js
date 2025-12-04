@@ -37,4 +37,15 @@ export const cardsAPI = {
   delete: (id) => api.delete(`/cards/${id}`),
 };
 
+// Labels API
+export const labelsAPI = {
+  getByBoardId: (boardId) => api.get(`/labels/board/${boardId}`),
+  getByCardId: (cardId) => api.get(`/labels/card/${cardId}`),
+  create: (data) => api.post('/labels', data),
+  update: (id, data) => api.put(`/labels/${id}`, data),
+  delete: (id) => api.delete(`/labels/${id}`),
+  addToCard: (cardId, labelId) => api.post(`/labels/card/${cardId}/label/${labelId}`),
+  removeFromCard: (cardId, labelId) => api.delete(`/labels/card/${cardId}/label/${labelId}`),
+};
+
 export default api;

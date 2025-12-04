@@ -1,4 +1,5 @@
 import db from '../database.js';
+import { cardModel } from './cardModel.js';
 
 export const boardModel = {
   // Get all boards for a user
@@ -64,15 +65,9 @@ export const boardModel = {
     `);
     const lists = listsStmt.all(id);
 
-    // Get all cards for each list
-    const cardsStmt = db.prepare(`
-      SELECT * FROM cards 
-      WHERE list_id = ? 
-      ORDER BY position ASC
-    `);
-
+    // Get all cards for each list with their labels
     lists.forEach(list => {
-      list.cards = cardsStmt.all(list.id);
+      list.cards = cardModel.findByListId(list.id);
     });
 
     board.lists = lists;

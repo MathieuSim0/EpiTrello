@@ -1,23 +1,49 @@
 import db from '../database.js';
 
 export const cardModel = {
-  // Get all cards for a list
+  // Get all cards for a list with their labels
   findByListId(listId) {
-    const stmt = db.prepare(`
+    const cards = db.prepare(`
       SELECT * FROM cards 
       WHERE list_id = ? 
       ORDER BY position ASC
+    `).all(listId);
+
+    // Get labels for each card
+    const labelStmt = db.prepare(`
+      SELECT l.* FROM labels l
+      INNER JOIN card_labels cl ON l.id = cl.label_id
+      WHERE cl.card_id = ?
+      ORDER BY l.title ASC
     `);
-    return stmt.all(listId);
+
+    return cards.map(card => ({
+      ...card,
+      labels: labelStmt.all(card.id)
+    }));
   },
 
-  // Get a specific card by id
+  // Get a specific card by id with its labels
   findById(id) {
-    const stmt = db.prepare(`
+    const card = db.prepare(`
       SELECT * FROM cards 
       WHERE id = ?
-    `);
-    return stmt.get(id);
+    `).get(id);
+
+    if (!card) return null;
+
+    // Get labels for the card
+    const labels = db.prepare(`
+      SELECT l.* FROM labels l
+      INNER JOIN card_labels cl ON l.id = cl.label_id
+      WHERE cl.card_id = ?
+      ORDER BY l.title ASC
+    `).all(id);
+
+    return {
+      ...card,
+      labels
+    };
   },
 
   // Create a new card

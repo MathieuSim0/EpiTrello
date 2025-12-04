@@ -62,6 +62,30 @@ const createTables = () => {
     )
   `);
 
+  // Labels table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS labels (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      color TEXT NOT NULL,
+      board_id INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (board_id) REFERENCES boards (id) ON DELETE CASCADE
+    )
+  `);
+
+  // Card-Labels association table (many-to-many)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS card_labels (
+      card_id INTEGER NOT NULL,
+      label_id INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (card_id, label_id),
+      FOREIGN KEY (card_id) REFERENCES cards (id) ON DELETE CASCADE,
+      FOREIGN KEY (label_id) REFERENCES labels (id) ON DELETE CASCADE
+    )
+  `);
+
   console.log('✅ Database tables created successfully');
 };
 

@@ -2,7 +2,7 @@ import { useDrop } from 'react-dnd';
 import { useState } from 'react';
 import Card from './Card';
 
-const List = ({ list, onUpdateList, onDeleteList, onCreateCard, onUpdateCard, onDeleteCard, onMoveCard }) => {
+const List = ({ list, boardId, onUpdateList, onDeleteList, onCreateCard, onUpdateCard, onDeleteCard, onMoveCard }) => {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState('');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -80,6 +80,7 @@ const List = ({ list, onUpdateList, onDeleteList, onCreateCard, onUpdateCard, on
           <Card
             key={card.id}
             card={card}
+            boardId={boardId}
             onUpdate={onUpdateCard}
             onDelete={onDeleteCard}
           />

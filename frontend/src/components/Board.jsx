@@ -153,6 +153,7 @@ const Board = ({ boardId }) => {
               <List
                 key={list.id}
                 list={list}
+                boardId={boardId}
                 onUpdateList={handleUpdateList}
                 onDeleteList={handleDeleteList}
                 onCreateCard={handleCreateCard}
