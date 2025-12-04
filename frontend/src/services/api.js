@@ -48,4 +48,13 @@ export const labelsAPI = {
   removeFromCard: (cardId, labelId) => api.delete(`/labels/card/${cardId}/label/${labelId}`),
 };
 
+// Comments API
+export const commentsAPI = {
+  getByCardId: (cardId) => api.get(`/comments/card/${cardId}`),
+  getCount: (cardId) => api.get(`/comments/card/${cardId}/count`),
+  create: (data) => api.post('/comments', data),
+  update: (id, data) => api.put(`/comments/${id}`, data),
+  delete: (id) => api.delete(`/comments/${id}`),
+};
+
 export default api;

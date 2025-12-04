@@ -86,6 +86,19 @@ const createTables = () => {
     )
   `);
 
+  // Comments table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS comments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      content TEXT NOT NULL,
+      card_id INTEGER NOT NULL,
+      author TEXT NOT NULL DEFAULT 'Utilisateur',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (card_id) REFERENCES cards (id) ON DELETE CASCADE
+    )
+  `);
+
   console.log('✅ Database tables created successfully');
 };
 

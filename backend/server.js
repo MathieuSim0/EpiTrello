@@ -4,6 +4,7 @@ import boardsRouter from './routes/boards.js';
 import listsRouter from './routes/lists.js';
 import cardsRouter from './routes/cards.js';
 import labelsRouter from './routes/labels.js';
+import commentsRouter from './routes/comments.js';
 import './database.js'; // Initialize database
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api/boards', boardsRouter);
 app.use('/api/lists', listsRouter);
 app.use('/api/cards', cardsRouter);
 app.use('/api/labels', labelsRouter);
+app.use('/api/comments', commentsRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {

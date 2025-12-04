@@ -1,12 +1,29 @@
 import { useDrag } from 'react-dnd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LabelManager from './LabelManager';
+import CommentSection from './CommentSection';
+import { commentsAPI } from '../services/api';
 
 const Card = ({ card, onUpdate, onDelete, boardId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showLabels, setShowLabels] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
   const [title, setTitle] = useState(card.title);
   const [description, setDescription] = useState(card.description || '');
+
+  useEffect(() => {
+    fetchCommentCount();
+  }, [card.id]);
+
+  const fetchCommentCount = async () => {
+    try {
+      const response = await commentsAPI.getCount(card.id);
+      setCommentCount(response.data.count);
+    } catch (error) {
+      console.error('Error fetching comment count:', error);
+    }
+  };
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'CARD',
@@ -64,7 +81,7 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
         <div className="border-t pt-3">
           <button
             onClick={() => setShowLabels(!showLabels)}
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium mb-2"
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium mb-2 block"
           >
             {showLabels ? '▼ Masquer les labels' : '▶ Gérer les labels'}
           </button>
@@ -74,6 +91,17 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
               cardId={card.id}
               onLabelsChange={() => onUpdate(card.id, { title, description })}
             />
+          )}
+        </div>
+        <div className="border-t pt-3 mt-3">
+          <button
+            onClick={() => setShowComments(!showComments)}
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium mb-2 block"
+          >
+            {showComments ? '▼ Masquer les commentaires' : `▶ Commentaires (${commentCount})`}
+          </button>
+          {showComments && (
+            <CommentSection cardId={card.id} />
           )}
         </div>
       </div>
@@ -110,6 +138,12 @@ const Card = ({ card, onUpdate, onDelete, boardId }) => {
             <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
               {card.description}
             </p>
+          )}
+          {commentCount > 0 && (
+            <div className="flex items-center gap-1 mt-2 text-gray-400 text-xs">
+              <span>💬</span>
+              <span>{commentCount}</span>
+            </div>
           )}
         </div>
         <button
