@@ -52,7 +52,7 @@ function App() {
           >
             <span>←</span> Retour aux tableaux
           </button>
-          <Board boardId={selectedBoardId} />
+          <Board boardId={selectedBoardId} onBoardDeleted={handleBackToBoards} />
         </div>
       )}
     </>

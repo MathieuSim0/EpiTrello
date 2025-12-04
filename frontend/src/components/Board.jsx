@@ -5,13 +5,15 @@ import { boardsAPI, listsAPI, cardsAPI } from '../services/api';
 import List from './List';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
+import BoardSettings from './BoardSettings';
 
-const Board = ({ boardId }) => {
+const Board = ({ boardId, onBoardDeleted }) => {
   const [board, setBoard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAddingList, setIsAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState('');
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     loadBoard();
@@ -136,16 +138,36 @@ const Board = ({ boardId }) => {
       <div className="h-screen flex flex-col bg-gray-100 animate-fade-in">
         <header className="bg-white border-b border-gray-200 p-6 shadow-sm pt-20">
           <div className="max-w-full mx-auto px-4">
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">
-              {board.title}
-            </h1>
-            {board.description && (
-              <p className="text-gray-600 mt-2">
-                {board.description}
-              </p>
-            )}
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                  {board.title}
+                </h1>
+                {board.description && (
+                  <p className="text-gray-600 mt-2">
+                    {board.description}
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={() => setShowSettings(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
+              >
+                <span>⚙️</span>
+                <span>Paramètres</span>
+              </button>
+            </div>
           </div>
         </header>
+
+        {showSettings && (
+          <BoardSettings
+            board={board}
+            onClose={() => setShowSettings(false)}
+            onUpdate={loadBoard}
+            onDelete={onBoardDeleted}
+          />
+        )}
 
         <main className="flex-1 overflow-x-auto p-4">
           <div className="flex gap-4 h-full">
